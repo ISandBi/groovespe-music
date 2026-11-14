@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -54,7 +55,7 @@ fun BandDetailScreen(
             id = bandId,
             name = "Cyber Chilangos",
             genre = "Quantum Jazz / Cyber-Core",
-            description = "Emanando desde los sectores cuánticos de la CDMX. Los Chilangos fusionan la psicodelia del tráfico en Reforma con algoritmos de jazz experimental del siglo XXII. Una frecuencia 100% verificada en la red GrooveSpace.",
+            description = "Emanando desde los sectores cuánticos de la CDMX. Fusionamos la psicodelia del tráfico en Reforma con algoritmos de jazz experimental del siglo XXII. Una frecuencia 100% verificada en la red GrooveSpace.",
             imageUrl = "https://images.unsplash.com/photo-1514525253361-bee8718a74a2?q=80&w=1200",
             monthlyListeners = 284500,
             totalEarnings = 92600.80,
@@ -100,8 +101,7 @@ fun BandDetailScreen(
                 ) {
                     Column(modifier = Modifier.padding(32.dp).padding(bottom = 48.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            val infiniteTransition = rememberInfiniteTransition(label = "glow")
-                            val glow by infiniteTransition.animateFloat(
+                            val glow by rememberInfiniteTransition(label = "glow").animateFloat(
                                 initialValue = 0.4f,
                                 targetValue = 1f,
                                 animationSpec = infiniteRepeatable(tween(1000), RepeatMode.Reverse),
@@ -151,13 +151,12 @@ fun BandDetailScreen(
                                 if (currentTrackId.isEmpty()) {
                                     onPlaySong(band.songs.first())
                                 } else {
-                                    // Simplemente disparamos el play de la misma canción o toggle en MainActivity
                                     onPlaySong(band.songs.find { it.id == currentTrackId } ?: band.songs.first())
                                 }
                             }
                         ) {
                             Box(contentAlignment = Alignment.Center) {
-                                Icon(imageVector = if (isPlayingGlobal) Icons.Default.Pause else Icons.Default.PlayArrow, contentDescription = null, tint = DeepSpace, modifier = Modifier.size(40.dp))
+                                Icon(imageVector = if (isPlayingGlobal && currentTrackId.isNotEmpty()) Icons.Default.Pause else Icons.Default.PlayArrow, contentDescription = null, tint = DeepSpace, modifier = Modifier.size(40.dp))
                             }
                         }
                     }

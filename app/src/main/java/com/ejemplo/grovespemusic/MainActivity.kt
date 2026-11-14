@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.*
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -27,7 +28,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             GrovespeMusicTheme {
-                // Estado global para simular el usuario y su rol
                 var currentUser by remember { 
                     mutableStateOf(User("u1", "Explorador CDMX", "user@groovespace.com", UserRole.FAN)) 
                 }
@@ -46,9 +46,11 @@ class MainActivity : ComponentActivity() {
                             mediaPlayer?.stop()
                             mediaPlayer?.release()
                             
-                            // Buscamos el audio. Intentamos varios nombres según lo que has configurado.
-                            val resId = context.resources.getIdentifier("ic_launcher_round", "mipmap", context.packageName).let {
-                                if (it == 0) context.resources.getIdentifier("audio_prueba", "raw", context.packageName) else it
+                            // Buscamos el audio. Intentamos varios nombres comunes.
+                            val resId = context.resources.getIdentifier("audio_prueba", "raw", context.packageName).let {
+                                if (it == 0) context.resources.getIdentifier("audio_prueba", "drawable", context.packageName) else it
+                            }.let {
+                                if (it == 0) context.resources.getIdentifier("ic_launcher_round", "mipmap", context.packageName) else it
                             }
 
                             if (resId != 0) {
@@ -73,14 +75,14 @@ class MainActivity : ComponentActivity() {
                 LaunchedEffect(isPlaying, currentSong) {
                     while (isPlaying && currentSong != null) {
                         delay(1000)
-                        val currentPos = progress + 0.01f
-                        progress = if (currentPos > 1f) 0f else currentPos
+                        val nextProgress = progress + 0.01f
+                        progress = if (nextProgress > 1f) 0f else nextProgress
                     }
                 }
 
                 val navController = rememberNavController()
 
-                Box {
+                Box(modifier = androidx.compose.ui.Modifier.fillMaxSize()) {
                     NavHost(navController = navController, startDestination = "login") {
                         composable("login") {
                             LoginScreen(
